@@ -1,0 +1,21 @@
+name: MoonCake
+version: 1.2
+main: com.xiaomian124.mooncake.MoonCake
+api-version: 26.2
+author: xiaomian124
+description: 为中秋节打造的月饼插件，让怪物也能掉落月饼。
+
+commands:
+  mooncake:
+    description: 月饼插件主命令
+    usage: /mooncake <help|reload|ranking|news|give>
+    permission: mooncake.use
+    permission-message: 你没有权限使用此命令！
+
+permissions:
+  mooncake.admin:
+    description: 管理员权限（重载配置和给予月饼）
+    default: op
+  mooncake.use:
+    description: 允许使用基础指令（help, ranking, news）
+    default: true
