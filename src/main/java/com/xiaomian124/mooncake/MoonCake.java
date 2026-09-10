@@ -1,9 +1,6 @@
 package com.xiaomian124.mooncake;
 
-import com.xiaomian124.mooncake.listeners.EntityDeathListener;
-import com.xiaomian124.mooncake.listeners.PickupListener;
-import com.xiaomian124.mooncake.listeners.PlaceCancelListener;
-import com.xiaomian124.mooncake.listeners.PlayerInteractListener;
+import com.xiaomian124.mooncake.listeners.*;
 import com.xiaomian124.mooncake.utils.ItemBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -43,7 +40,6 @@ public final class MoonCake extends JavaPlugin implements CommandExecutor, TabCo
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private boolean isEventActive = false;
-    private final List<NamespacedKey> recipeKeys = new ArrayList<>();
 
     private int startTaskId = -1;
     private int endTaskId = -1;
@@ -56,6 +52,7 @@ public final class MoonCake extends JavaPlugin implements CommandExecutor, TabCo
     public final NamespacedKey keyNutrition = new NamespacedKey(this, "nutrition");
     public final NamespacedKey keySaturation = new NamespacedKey(this, "saturation");
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.M.d.HH:mm");
+    private final List<NamespacedKey> recipeKeys = new ArrayList<>();
     private static final String MOON_CAKE_TEXTURE =
             "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjQ4NGM0MzVhYTBkY2E4MmMyOWViZjRhNTM1NGMzMjk0ODA2MWE3NmM3ZWNiMDUzNWY0ZTliYTI0MDNkMGMzNiJ9fX0=";
 
@@ -67,8 +64,16 @@ public final class MoonCake extends JavaPlugin implements CommandExecutor, TabCo
         getServer().getPluginManager().registerEvents(new PlaceCancelListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
         getServer().getPluginManager().registerEvents(new PickupListener(this), this);
+        getServer().getPluginManager().registerEvents(new PetFeedListener(this), this);
+        getServer().getPluginManager().registerEvents(new FeedPlayerListener(this), this);
 
         registerRecipes();
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            for (NamespacedKey key : recipeKeys) {
+                player.discoverRecipe(key);
+            }
+        }
 
         getServer().getPluginManager().registerEvents(new Listener() {
             @EventHandler
